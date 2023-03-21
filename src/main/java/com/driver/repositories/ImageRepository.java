@@ -1,6 +1,6 @@
-package com.driver.Repository;
+package com.driver.repositories;
 
-import com.driver.Entity.Image;
+import com.driver.models.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

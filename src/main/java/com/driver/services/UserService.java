@@ -1,6 +1,6 @@
 package com.driver.services;
-import com.driver.Entity.User;
-import com.driver.Repository.UserRepository;
+import com.driver.models.User;
+import com.driver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
