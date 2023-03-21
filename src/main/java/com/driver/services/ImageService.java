@@ -35,18 +35,6 @@ public class ImageService {
     }
 
     public void deleteImage(Integer id) throws Exception {
-        Image image;
-        try {
-            image = imageRepository2.findById(id).get();
-        }
-        catch (Exception e){
-            throw new Exception();
-        }
-
-        Blog blog=blogRepository2.findById(image.getBlog().getId()).get();
-
-        blog.getImageList().remove(image);
-        blogRepository2.save(blog);
         imageRepository2.deleteById(id);
 
     }
