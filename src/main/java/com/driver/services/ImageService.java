@@ -13,15 +13,10 @@ public class ImageService {
     @Autowired
     ImageRepository imageRepository2;
 
-    public Image addImage(Integer blogId, String description, String dimensions) throws Exception {
+    public Image addImage(Integer blogId, String description, String dimensions){
         //add an image to the blog
-        Blog blog;
-        try {
-             blog = blogRepository2.findById(blogId).get();
-        }
-        catch (Exception e){
-            throw new Exception();
-        }
+        Blog blog = blogRepository2.findById(blogId).get();
+
         Image image=new Image();
         image.setDescription(description);
         image.setDimensions(dimensions);
@@ -34,29 +29,23 @@ public class ImageService {
         return image;
     }
 
-    public void deleteImage(Integer id) throws Exception {
+    public void deleteImage(Integer id){
         imageRepository2.deleteById(id);
 
     }
 
-    public int countImagesInScreen(Integer id, String screenDimensions) throws Exception {
+    public int countImagesInScreen(Integer id, String screenDimensions) {
         //Find the number of images of given dimensions that can fit in a screen having `screenDimensions`
 
-        Image image;
-        try {
-            image = imageRepository2.findById(id).get();
-        }
-        catch (Exception e){
-            throw new Exception();
-        }
+        Image image=imageRepository2.findById(id).get();
 
         String imageDim[]=image.getDimensions().split("X");
         String screenDim[]=screenDimensions.split("X");
 
-        int imageDimensionhori=Integer.valueOf(imageDim[0]);
-        int imageDimensionvert=Integer.valueOf(imageDim[1]);
-        int screenDimensionhori=Integer.valueOf(screenDim[0]);
-        int screenDimensionveri=Integer.valueOf(screenDim[1]);
+        int imageDimensionhori=Integer.parseInt(imageDim[0]);
+        int imageDimensionvert=Integer.parseInt(imageDim[1]);
+        int screenDimensionhori=Integer.parseInt(screenDim[0]);
+        int screenDimensionveri=Integer.parseInt(screenDim[1]);
         int count=(screenDimensionhori/imageDimensionhori)*(screenDimensionveri/imageDimensionvert);
 
         return count;
