@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "User")
 public class User {
 
     @Id
@@ -21,6 +22,11 @@ public class User {
     List<Blog> blogList;
 
     public User() {
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     public User(int id, String userName, String password, String firstName, String lastName, List<Blog> blogList) {

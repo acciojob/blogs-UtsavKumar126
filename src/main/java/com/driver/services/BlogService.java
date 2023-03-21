@@ -15,12 +15,18 @@ public class BlogService {
     BlogRepository blogRepository;
 
     @Autowired
-    UserRepository userRepository;
+    UserRepository userRepository1;
 
-    public Blog createAndReturnBlog(Integer userId, String title, String content) {
+    public Blog createAndReturnBlog(Integer userId, String title, String content) throws Exception {
+
         //create a blog at the current time
-        User user=userRepository.findById(userId).get();
-
+        User user;
+        try {
+            user = userRepository1.findById(userId).get();
+        }
+        catch (Exception e){
+            throw new Exception();
+        }
         Blog blog=new Blog();
         blog.setTitle(title);
         blog.setContent(content);
@@ -28,7 +34,7 @@ public class BlogService {
 
         user.getBlogList().add(blog);
 
-        userRepository.save(user);
+        userRepository1.save(user);
 
         return blog;
     }
@@ -40,7 +46,7 @@ public class BlogService {
         User user=blog.getUser();
         user.getBlogList().remove(blog);
 
-        userRepository.save(user);
+        userRepository1.save(user);
         blogRepository.deleteById(blogId);
     }
 }

@@ -9,14 +9,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class ImageService {
     @Autowired
-    BlogRepository blogRepository;
+    BlogRepository blogRepository2;
     @Autowired
-    ImageRepository imageRepository;
+    ImageRepository imageRepository2;
 
-    public Image addImage(Integer blogId, String description, String dimensions){
+    public Image addImage(Integer blogId, String description, String dimensions) throws Exception {
         //add an image to the blog
-        Blog blog=blogRepository.findById(blogId).get();
-
+        Blog blog;
+        try {
+             blog = blogRepository2.findById(blogId).get();
+        }
+        catch (Exception e){
+            throw new Exception();
+        }
         Image image=new Image();
         image.setDescription(description);
         image.setDimensions(dimensions);
@@ -24,34 +29,47 @@ public class ImageService {
 
         blog.getImageList().add(image);
 
-        blogRepository.save(blog);
+        blogRepository2.save(blog);
 
         return image;
     }
 
-    public void deleteImage(Integer id){
-        Image image=imageRepository.findById(id).get();
+    public void deleteImage(Integer id) throws Exception {
+        Image image;
+        try {
+            image = imageRepository2.findById(id).get();
+        }
+        catch (Exception e){
+            throw new Exception();
+        }
 
-        Blog blog=blogRepository.findById(image.getBlog().getId()).get();
+        Blog blog=blogRepository2.findById(image.getBlog().getId()).get();
 
         blog.getImageList().remove(image);
-        blogRepository.save(blog);
-        imageRepository.deleteById(id);
+        blogRepository2.save(blog);
+        imageRepository2.deleteById(id);
 
     }
 
-    public int countImagesInScreen(Integer id, String screenDimensions) {
+    public int countImagesInScreen(Integer id, String screenDimensions) throws Exception {
         //Find the number of images of given dimensions that can fit in a screen having `screenDimensions`
 
-        Image image=imageRepository.findById(id).get();
+        Image image;
+        try {
+            image = imageRepository2.findById(id).get();
+        }
+        catch (Exception e){
+            throw new Exception();
+        }
 
         String imageDim[]=image.getDimensions().split("X");
         String screenDim[]=screenDimensions.split("X");
 
-        int imageDimension=(Integer.valueOf(imageDim[0])*Integer.valueOf(imageDim[1]));
-        int screenDimension=(Integer.valueOf(screenDim[0])*Integer.valueOf(screenDim[1]));
-
-        int count=screenDimension/imageDimension;
+        int imageDimensionhori=Integer.valueOf(imageDim[0]);
+        int imageDimensionvert=Integer.valueOf(imageDim[1]);
+        int screenDimensionhori=Integer.valueOf(screenDim[0]);
+        int screenDimensionveri=Integer.valueOf(screenDim[1]);
+        int count=(screenDimensionhori/imageDimensionhori)*(screenDimensionveri/imageDimensionvert);
 
         return count;
     }
