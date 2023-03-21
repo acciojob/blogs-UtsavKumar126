@@ -19,7 +19,7 @@ public class ImageService {
 
         Image image=new Image();
         image.setDescription(description);
-        image.setDimension(dimensions);
+        image.setDimensions(dimensions);
         image.setBlog(blog);
 
         blog.getImageList().add(image);
@@ -45,7 +45,7 @@ public class ImageService {
 
         Image image=imageRepository.findById(id).get();
 
-        String imageDim[]=image.getDimension().split("X");
+        String imageDim[]=image.getDimensions().split("X");
         String screenDim[]=screenDimensions.split("X");
 
         int imageDimension=(Integer.valueOf(imageDim[0])*Integer.valueOf(imageDim[1]));
