@@ -1,61 +1,58 @@
 package com.driver.services;
-
-import com.driver.models.*;
-import com.driver.repositories.*;
+import com.driver.Entity.Blog;
+import com.driver.Entity.Image;
+import com.driver.Repository.BlogRepository;
+import com.driver.Repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-
 @Service
 public class ImageService {
-
     @Autowired
-    BlogRepository blogRepository2;
+    BlogRepository blogRepository;
     @Autowired
-    ImageRepository imageRepository2;
+    ImageRepository imageRepository;
 
-    public Image addImage(Integer blogId, String description, String dimensions) {
+    public Image addImage(Integer blogId, String description, String dimensions){
         //add an image to the blog
-//        if(!blogRepository2.findById(blogId).isPresent()) {
-//            throw new Exception();
-//        }
-        Blog blog = blogRepository2.findById(blogId).get();
-        Image image = new Image(blog,description,dimensions);
+        Blog blog=blogRepository.findById(blogId).get();
+
+        Image image=new Image();
+        image.setDescription(description);
+        image.setDimension(dimensions);
+        image.setBlog(blog);
+
         blog.getImageList().add(image);
-        blogRepository2.save(blog);
+
+        blogRepository.save(blog);
+
         return image;
-        //Here I am not explicitly adding image in image-repository because due to cascading effect
     }
 
     public void deleteImage(Integer id){
-        imageRepository2.deleteById(id);
+        Image image=imageRepository.findById(id).get();
+
+        Blog blog=blogRepository.findById(image.getBlog().getId()).get();
+
+        blog.getImageList().remove(image);
+        blogRepository.save(blog);
+        imageRepository.deleteById(id);
+
     }
 
     public int countImagesInScreen(Integer id, String screenDimensions) {
         //Find the number of images of given dimensions that can fit in a screen having `screenDimensions`
-        String [] scrarray = screenDimensions.split("X"); //A=Length   X    B=Breadth
-//        if(!imageRepository2.findById(id).isPresent()){
-//            throw new Exception();
-//        }
-        Image image = imageRepository2.findById(id).get();
 
-        String imageDimensions = image.getDimensions();
-        String [] imgarray = imageDimensions.split("X");
+        Image image=imageRepository.findById(id).get();
 
-        int scrl = Integer.parseInt(scrarray[0]); //A -- > integer
-        int scrb = Integer.parseInt(scrarray[1]); //B -- > integer
+        String imageDim[]=image.getDimension().split("X");
+        String screenDim[]=screenDimensions.split("X");
 
-        int imgl = Integer.parseInt(imgarray[0]); //A -- > integer
-        int imgb = Integer.parseInt(imgarray[1]); //B -- > integer
+        int imageDimension=(Integer.valueOf(imageDim[0])*Integer.valueOf(imageDim[1]));
+        int screenDimension=(Integer.valueOf(screenDim[0])*Integer.valueOf(screenDim[1]));
 
-        return no_Images(scrl,scrb,imgl,imgb);
+        int count=screenDimension/imageDimension;
 
-    }
-
-    private int no_Images(int scrl, int scrb, int imgl, int imgb) {
-        int lenC = scrl/imgl; //
-        int lenB = scrb/imgb;
-        return lenC*lenB;
+        return count;
     }
 }
